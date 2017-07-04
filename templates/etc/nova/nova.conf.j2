@@ -1,0 +1,155 @@
+# {{ ansible_managed }}
+
+[DEFAULT]
+dhcpbridge = /usr/bin/nova-dhcpbridge
+dhcpbridge_flagfile = /etc/nova/nova.conf
+enabled_apis = osapi_compute,metadata
+firewall_driver = nova.virt.firewall.NoopFirewallDriver
+force_dhcp_release = true
+my_ip = {{ openstack_compute_service_controller_management_ip }}
+state_path = /var/lib/nova
+transport_url = rabbit://{{ openstack_compute_service_controller_rabbit_user }}:{{ openstack_compute_service_controller_rabbit_pass }}@{{ openstack_compute_service_controller_rabbit_host }}
+use_neutron = True
+
+[api]
+auth_strategy = keystone
+
+[api_database]
+connection = mysql+pymysql://nova:{{ openstack_compute_service_controller_nova_db_pass }}@{{ openstack_compute_service_controller_nova_db_host }}/nova_api
+
+[barbican]
+
+[cache]
+
+[cells]
+enable = False
+
+[cinder]
+
+[cloudpipe]
+
+[conductor]
+
+[console]
+
+[consoleauth]
+
+[cors]
+
+[cors.subdomain]
+
+[crypto]
+
+[database]
+connection = mysql+pymysql://nova:{{ openstack_compute_service_controller_nova_db_pass }}@{{ openstack_compute_service_controller_nova_db_host }}/nova
+
+[ephemeral_storage_encryption]
+
+[filter_scheduler]
+
+[glance]
+api_servers = {{ openstack_compute_service_controller_keystone_service_endpoint_url }}:9292
+
+[guestfs]
+
+[healthcheck]
+
+[hyperv]
+
+[image_file_url]
+
+[ironic]
+
+[key_manager]
+
+[keystone_authtoken]
+auth_type = {{ openstack_compute_service_controller_keystone_authtoken['auth_type'] }}
+auth_uri = {{ openstack_compute_service_controller_keystone_authtoken['auth_uri'] }}
+auth_url = {{ openstack_compute_service_controller_keystone_authtoken['auth_url'] }}
+memcached_servers = {{ openstack_compute_service_controller_keystone_authtoken['memcached_servers']|join(',') }}
+password = {{ openstack_compute_service_controller_keystone_authtoken['password'] }}
+project_domain_name = {{ openstack_compute_service_controller_keystone_authtoken['project_domain_name'] }}
+project_name = {{ openstack_compute_service_controller_keystone_authtoken['project_name'] }}
+user_domain_name = {{ openstack_compute_service_controller_keystone_authtoken['user_domain_name'] }}
+username = {{ openstack_compute_service_controller_keystone_authtoken['username'] }}
+
+[libvirt]
+
+[matchmaker_redis]
+
+[metrics]
+
+[mks]
+
+[neutron]
+
+[notifications]
+
+[osapi_v21]
+
+[oslo_concurrency]
+lock_path = /var/lib/nova/tmp
+
+[oslo_messaging_amqp]
+
+[oslo_messaging_kafka]
+
+[oslo_messaging_notifications]
+
+[oslo_messaging_rabbit]
+
+[oslo_messaging_zmq]
+
+[oslo_middleware]
+
+[oslo_policy]
+
+[pci]
+
+[placement]
+auth_type = {{ openstack_compute_service_controller_placement['auth_type'] }}
+auth_url = {{ openstack_compute_service_controller_placement['auth_url'] }}
+os_region_name = {{ openstack_compute_service_controller_keystone_service_endpoint_region }}
+password = {{ openstack_compute_service_controller_placement['password'] }}
+project_domain_name = {{ openstack_compute_service_controller_placement['project_domain_name'] }}
+project_name = {{ openstack_compute_service_controller_placement['project_name'] }}
+user_domain_name = {{ openstack_compute_service_controller_placement['user_domain_name'] }}
+username = {{ openstack_compute_service_controller_placement['username'] }}
+
+[quota]
+
+[rdp]
+
+[remote_debug]
+
+[scheduler]
+
+[serial_console]
+
+[service_user]
+
+[spice]
+
+[ssl]
+
+[trusted_computing]
+
+[upgrade_levels]
+
+[vendordata_dynamic_auth]
+
+[vmware]
+
+[vnc]
+enabled = true
+vncserver_listen = $my_ip
+vncserver_proxyclient_address = $my_ip
+
+[workarounds]
+
+[wsgi]
+api_paste_config = /etc/nova/api-paste.ini
+
+[xenserver]
+
+[xvp]

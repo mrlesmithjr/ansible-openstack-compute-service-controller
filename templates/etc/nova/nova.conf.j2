@@ -82,6 +82,17 @@ username = {{ openstack_compute_service_controller_keystone_authtoken['username'
 [mks]
 
 [neutron]
+auth_type = {{ openstack_compute_service_controller_neutron['auth_type'] }}
+auth_url = {{ openstack_compute_service_controller_neutron['auth_url'] }}
+metadata_proxy_shared_secret = {{ openstack_compute_service_controller_neutron_metadata_secret }}
+password = {{ openstack_compute_service_controller_neutron['password'] }}
+project_domain_name = {{ openstack_compute_service_controller_neutron['project_domain_name'] }}
+project_name = {{ openstack_compute_service_controller_neutron['project_name'] }}
+region_name = {{ openstack_compute_service_controller_keystone_service_endpoint_region }}
+service_metadata_proxy = true
+url = {{ openstack_compute_service_controller_neutron['url'] }}
+user_domain_name = {{ openstack_compute_service_controller_neutron['user_domain_name'] }}
+username = {{ openstack_compute_service_controller_neutron['username'] }}
 
 [notifications]
 

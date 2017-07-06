@@ -15,6 +15,10 @@
   with_items:
     - '{{ openstack_compute_service_controller_nova_user_info }}'
     - '{{ openstack_compute_service_controller_placement_user_info }}'
+  when: >
+        not openstack_compute_service_controller_ha or
+        (openstack_compute_service_controller_ha and
+          inventory_hostname == openstack_compute_service_controller_ha_master)
 
 # Create default user roles
 - name: users | Creating User Roles
@@ -28,3 +32,7 @@
   with_items:
     - '{{ openstack_compute_service_controller_nova_user_info }}'
     - '{{ openstack_compute_service_controller_placement_user_info }}'
+  when: >
+        not openstack_compute_service_controller_ha or
+        (openstack_compute_service_controller_ha and
+          inventory_hostname == openstack_compute_service_controller_ha_master)

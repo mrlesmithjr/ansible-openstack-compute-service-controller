@@ -20,7 +20,11 @@
 - name: config | Populate The nova-api Database
   command: su -s /bin/sh -c "nova-manage api_db sync" nova
   become: true
-  when: _openstack_compute_service_controller_nova_conf['changed']
+  when: >
+        not openstack_compute_service_controller_ha or
+        (openstack_compute_service_controller_ha and
+          inventory_hostname == openstack_compute_service_controller_ha_master) and
+        _openstack_compute_service_controller_nova_conf['changed']
 
 - name: config | Checking If cell0 Database Has Been Registered
   stat:
@@ -32,21 +36,57 @@
   command: su -s /bin/sh -c "nova-manage cell_v2 map_cell0" nova
   become: true
   register: "_openstack_compute_service_controller_cell0_registered"
-  when: not _openstack_compute_service_controller_cell0_registered_check['stat']['exists']
+  when: >
+        not openstack_compute_service_controller_ha or
+        (openstack_compute_service_controller_ha and
+          inventory_hostname == openstack_compute_service_controller_ha_master) and
+        not _openstack_compute_service_controller_cell0_registered_check['stat']['exists']
 
 - name: config | Create the cell1 cell
   command: su -s /bin/sh -c "nova-manage cell_v2 create_cell --name=cell1 --verbose" nova
   become: true
-  when: _openstack_compute_service_controller_cell0_registered['changed']
+  when: >
+        not openstack_compute_service_controller_ha or
+        (openstack_compute_service_controller_ha and
+          inventory_hostname == openstack_compute_service_controller_ha_master) and
+        _openstack_compute_service_controller_cell0_registered['changed']
 
 - name: config | Populate the nova database
   command: su -s /bin/sh -c "nova-manage db sync" nova
   become: true
-  when: _openstack_compute_service_controller_nova_conf['changed']
+  when: >
+        not openstack_compute_service_controller_ha or
+        (openstack_compute_service_controller_ha and
+          inventory_hostname == openstack_compute_service_controller_ha_master) and
+        _openstack_compute_service_controller_nova_conf['changed']
 
 - name: config | Marking cell0 Database As Being Registered
   file:
     dest: "/etc/nova/.cell0_db_registered"
     state: "touch"
   become: true
-  when: _openstack_compute_service_controller_cell0_registered['changed']
+  when: >
+        not openstack_compute_service_controller_ha or
+        (openstack_compute_service_controller_ha and
+          inventory_hostname == openstack_compute_service_controller_ha_master) and
+        _openstack_compute_service_controller_cell0_registered['changed']
+
+- name: config | Setting Fact (_cell0_registered)
+  set_fact:
+    _cell0_registered: true
+  when: >
+        not openstack_compute_service_controller_ha or
+        (openstack_compute_service_controller_ha and
+          inventory_hostname == openstack_compute_service_controller_ha_master) and
+          (_openstack_compute_service_controller_cell0_registered['changed'] or
+          _openstack_compute_service_controller_cell0_registered_check['stat']['exists'])
+
+- name: config | Marking cell0 Database As Being Registered
+  file:
+    dest: "/etc/nova/.cell0_db_registered"
+    state: "touch"
+  become: true
+  when: >
+        (openstack_compute_service_controller_ha and
+          inventory_hostname != openstack_compute_service_controller_ha_master) and
+        hostvars[openstack_compute_service_controller_ha_master]['_cell0_registered']

@@ -12,6 +12,12 @@ openstack_compute_service_controller_endpoint_services:
     description: "Placement Service"
     api_port: 8778
 
+# HA info
+## Define as true if using HA
+openstack_compute_service_controller_ha: false
+## Define host which should be identified as HA master
+openstack_compute_service_controller_ha_master: 'controller01'
+
 # keystone_authtoken
 openstack_compute_service_controller_keystone_authtoken:
   auth_type: 'password'
@@ -111,7 +117,8 @@ openstack_compute_service_controller_placement_user_info:
 openstack_compute_service_controller_placement_user_pass: []
 
 # RabbitMQ Connection Info
-openstack_compute_service_controller_rabbit_host: 'localhost'
+openstack_compute_service_controller_rabbit_hosts:
+  - 127.0.0.1
 openstack_compute_service_controller_rabbit_pass: 'openstack'
 openstack_compute_service_controller_rabbit_user: 'openstack'
 

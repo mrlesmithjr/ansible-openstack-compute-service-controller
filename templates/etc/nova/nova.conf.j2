@@ -8,7 +8,11 @@ firewall_driver = nova.virt.firewall.NoopFirewallDriver
 force_dhcp_release = true
 my_ip = {{ openstack_compute_service_controller_management_ip }}
 state_path = /var/lib/nova
-transport_url = rabbit://{{ openstack_compute_service_controller_rabbit_user }}:{{ openstack_compute_service_controller_rabbit_pass }}@{{ openstack_compute_service_controller_rabbit_host }}
+{% set _rabbit_user = openstack_compute_service_controller_rabbit_user %}
+{% set _rabbit_pass = openstack_compute_service_controller_rabbit_pass %}
+transport_url = rabbit://{% for host in openstack_compute_service_controller_rabbit_hosts %}{{ _rabbit_user }}:{{ _rabbit_pass }}@{{ host }}{% if not loop.last %},{% endif %}{% endfor %}
+
+
 use_neutron = True
 
 [api]

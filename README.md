@@ -30,6 +30,14 @@ None
 ---
 # defaults file for ansible-openstack-compute-service-controller
 
+# A list of APIs to enable by default
+#
+# ec2 is not available in Ocata
+openstack_compute_service_controller_apis:
+  # - ec2
+  - metadata
+  - osapi_compute
+
 openstack_compute_service_controller_endpoint_services:
   - name: 'nova'
     type: 'compute'
@@ -160,6 +168,9 @@ openstack_compute_service_controller_services:
     service_type: 'placement'
     description: 'OpenStack Placement API'
     state: 'present'
+
+# Defines whether VNC is enabled or not
+openstack_compute_service_controller_vnc: true
 ```
 
 ## Dependencies

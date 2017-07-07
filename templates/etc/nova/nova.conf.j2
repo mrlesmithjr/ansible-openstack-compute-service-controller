@@ -3,15 +3,16 @@
 [DEFAULT]
 dhcpbridge = /usr/bin/nova-dhcpbridge
 dhcpbridge_flagfile = /etc/nova/nova.conf
-enabled_apis = osapi_compute,metadata
+enabled_apis = {{ openstack_compute_service_controller_apis|join(',') }}
 firewall_driver = nova.virt.firewall.NoopFirewallDriver
 force_dhcp_release = true
+metadata_listen = {{ openstack_compute_service_controller_management_ip }}
 my_ip = {{ openstack_compute_service_controller_management_ip }}
+osapi_compute_listen = {{ openstack_compute_service_controller_management_ip }}
 state_path = /var/lib/nova
 {% set _rabbit_user = openstack_compute_service_controller_rabbit_user %}
 {% set _rabbit_pass = openstack_compute_service_controller_rabbit_pass %}
 transport_url = rabbit://{% for host in openstack_compute_service_controller_rabbit_hosts %}{{ _rabbit_user }}:{{ _rabbit_pass }}@{{ host }}{% if not loop.last %},{% endif %}{% endfor %}
-
 
 use_neutron = True
 
@@ -157,9 +158,10 @@ discover_hosts_in_cells_interval = 300
 [vmware]
 
 [vnc]
-enabled = true
-vncserver_listen = $my_ip
-vncserver_proxyclient_address = $my_ip
+enabled = {{ openstack_compute_service_controller_vnc }}
+novncproxy_base_url = http://{{ openstack_compute_service_controller_management_ip }}:6080/vnc_auto.html
+novncproxy_host = {{ openstack_compute_service_controller_management_ip }}
+vncserver_proxyclient_address = {{ openstack_compute_service_controller_management_ip }}
 
 [workarounds]
 
